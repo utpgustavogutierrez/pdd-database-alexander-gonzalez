@@ -4,32 +4,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Sakila
-{
-  public static void main(String[] args)
-  {
-    // NOTE: Connection and Statement are AutoClosable.
-    //       Don't forget to close them both in order to avoid leaks.
-    try
-    (
-      // create a database connection
-      Connection connection = DriverManager.getConnection("jdbc:sqlite:./sqlite-sakila.db");
+public class Sakila {
+ 
+  public static void main(String[] args) {
+
+    try {
+      DatabaseConnection dataConnection = DatabaseConnection.getInstance();
+      Connection connection = dataConnection.getConnection();
       Statement statement = connection.createStatement();
-    )
-    {
+    
       statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-      ResultSet rs = statement.executeQuery("select * from film");
-      while(rs.next())
-      {
+      ResultSet rs = statement.executeQuery("select * from category");
+
+      while(rs.next()) {
         // read the result set
-        System.out.println("title = " + rs.getString("title"));
-      }
-    }
-    catch(SQLException e)
-    {
-      // if the error message is "out of memory",
-      // it probably means no database file is found
+        System.out.println("Category = " + rs.getString("name"));
+      }     
+    } catch (SQLException e){
       e.printStackTrace(System.err);
     }
   }
